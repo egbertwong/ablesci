@@ -1,18 +1,17 @@
 name: Ablesci Daily Sign-In
 
 on:
-  # 手动触发（便于调试）
-  workflow_dispatch:
-  # 定时触发 —— 注意 cron 使用 **UTC**
+  workflow_dispatch: # 手动触发
   schedule:
-    # 08 : 30 中国标准时间 (= UTC+8 ⇒ 00 : 30 UTC)
-    - cron: '30 0 * * *'
-    # 如需 08 : 30 America/Chicago（夏令时 UTC-5），替换为：
-    # - cron: '30 13 * * *'
+    # 每天 08:30 (Asia/Shanghai) == 00:30 UTC
+    - cron: "30 0 * * *" #
 
 jobs:
   sign-in:
     runs-on: ubuntu-latest
+    env:
+      ABLESCI_COOKIE: ${{ secrets.ABLESCI_COOKIE }}
+      SERVERCHAN_SENDKEY: ${{ secrets.SERVERCHAN_SENDKEY }}
 
     steps:
       - uses: actions/checkout@v4
@@ -27,7 +26,5 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Run sign-in script
-        env:
-          ABLESCI_COOKIE: ${{ secrets.ABLESCI_COOKIE }}
+      - name: Run sign-in & notify
         run: python index.py
