@@ -1,5 +1,7 @@
 import os
 import datetime as dt
+
+import pytz
 from ablesci import ablesci
 from serverchan_sdk import sc_send
 
@@ -30,7 +32,7 @@ def main() -> None:
     flag = "成功" if body.get("code") == 0 else "失败"
 
     # ————— 组织推送内容 —————
-    now = dt.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    now = dt.datetime.now(pytz.timezone("Asia/Shanghai")).strftime("%Y-%m-%d %H:%M:%S")
     title = f"科研通签到{flag} · {now}"
     desp = msg
 
